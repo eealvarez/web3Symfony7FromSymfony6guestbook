@@ -31,6 +31,20 @@
 			</li>
 		</ul>
 
+		<h2>Give your feedback</h2>
+
+		{% for conference in conferences %}
+
+			<ul>
+				<li>{{ conference }}</li>
+			</ul>
+
+			<p>
+				<a href="{{ path('conference', { 'id': conference.id }) }}">View</a>
+			</p>
+
+		{% endfor %}
+
 		<html>
 			<body>
 				<img src="/images/under-construction.gif"/>
