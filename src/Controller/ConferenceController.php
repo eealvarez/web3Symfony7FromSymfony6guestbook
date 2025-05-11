@@ -8,13 +8,17 @@ use App\Repository\ConferenceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class ConferenceController extends AbstractController
 {
     #[Route('/', name: 'homepage')]
-    public function homepage(ConferenceRepository $conferenceRepository): Response
+    public function homepage(ConferenceRepository $conferenceRepository, SessionInterface $session): Response
     {
+
+        $session->set('prueba', 'Hola mundo');
+        dump($session->get('prueba'));
 
         $conferences = $conferenceRepository->findAll();
 
