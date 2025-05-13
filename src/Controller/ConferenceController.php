@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 
 final class ConferenceController extends AbstractController
 {
@@ -40,8 +41,8 @@ final class ConferenceController extends AbstractController
 
 
 
-    #[Route('/conference/{id}', name: 'conference')]
-    public function show(Request $request, CommentRepository $commentRepository, Conference $conference): Response
+    #[Route('/conference/{slug}', name: 'conference')]
+    public function show(Request $request, CommentRepository $commentRepository, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference): Response
     {
 
         // $offset = max(value1: 0, $request->query->getInt(key: 'offset', default: 0)); //eso es lo que significan los 2 parámetros dentro del método getInt();
