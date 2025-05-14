@@ -11,9 +11,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use App\Entity\Comment;
+use App\Form\CommentTypeForm;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 final class ConferenceController extends AbstractController
 {
+
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+    ) {}
+
     #[Route('/', name: 'homepage')]
     public function homepage(ConferenceRepository $conferenceRepository, SessionInterface $session): Response
     {
@@ -42,8 +51,31 @@ final class ConferenceController extends AbstractController
 
 
     #[Route('/conference/{slug}', name: 'conference')]
-    public function show(Request $request, CommentRepository $commentRepository, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference): Response
-    {
+    // public function show(Request $request, CommentRepository $commentRepository, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference): Response
+    public function show(
+        Request $request,
+        #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference,
+        CommentRepository $commentRepository,
+        #[Autowire('%photo_dir%')] string $photoDir,
+    ): Response {
+
+        $comment = new Comment();
+        $form = $this->createForm(CommentTypeForm::class, $comment);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setConference($conference);
+
+            if ($photo = $form['photo']->getData()) {
+                $filename = bin2hex(random_bytes(6)) . '.' . $photo->guessExtension();
+                $photo->move($photoDir, $filename);
+                $comment->setPhotoFilename($filename);
+            }
+
+            $this->entityManager->persist($comment);
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('conference', ['slug' => $conference->getSlug()]);
+        }
 
         // $offset = max(value1: 0, $request->query->getInt(key: 'offset', default: 0)); //eso es lo que significan los 2 parámetros dentro del método getInt();
         $offset = max(0, $request->query->getInt('offset', 0));
@@ -61,6 +93,7 @@ final class ConferenceController extends AbstractController
             'comments' => $paginator,
             'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
             'next' => min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE),
+            'comment_form' => $form,
 
         ]);
     }
