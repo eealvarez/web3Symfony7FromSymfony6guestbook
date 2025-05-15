@@ -15,6 +15,7 @@ use App\Entity\Comment;
 use App\Form\CommentTypeForm;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 final class ConferenceController extends AbstractController
 {
@@ -67,7 +68,12 @@ final class ConferenceController extends AbstractController
 
             if ($photo = $form['photo']->getData()) {
                 $filename = bin2hex(random_bytes(6)) . '.' . $photo->guessExtension();
-                $photo->move($photoDir, $filename);
+                try {
+                    $photo->move($photoDir, $filename);
+                } catch (FileException $e) {
+                    //unable to upload the photo
+                }
+
                 $comment->setPhotoFilename($filename);
             }
 
