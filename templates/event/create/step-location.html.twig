@@ -7,14 +7,16 @@
       <h1
         class="text-xl mb-3 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
       >
-        Event Invitations
+        Event Location
       </h1>
       {{ form_start(form) }}
-      {{ form_row(form.participants) }}
+      {{ form_row(form.address) }}
+      {{ form_row(form.latitude) }}
+      {{ form_row(form.longitude) }}
       <div class="flex justify-between items-center">
         <a
-          href="{{ path('create_event', { step: 'location' }) }}"
-          class="block w-full me-3 px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          href="{{ path('create_event', { step: 'details' }) }}"
+          class="block w-full px-3 me-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
           back
         </a>
@@ -22,7 +24,7 @@
           type="submit"
           class="block w-full px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
-          create
+          next
         </button>
       </div>
       {{ form_end(form) }}

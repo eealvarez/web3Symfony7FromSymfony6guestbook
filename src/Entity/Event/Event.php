@@ -34,7 +34,7 @@ class Event
     private null|DateTimeImmutable|CarbonImmutable $endAt = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    private null|CarbonImmutable $createdAt = null;
+    private null|DateTimeImmutable|CarbonImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     private ?User $owner = null;
