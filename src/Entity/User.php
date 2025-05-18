@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Event\Event;
 use App\Entity\Event\EventParticipant;
-use App\Repository\User\UserRepository;
+use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -18,7 +18,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['email'], message: 'Ya hay un usuario con este email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -54,10 +54,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $avatar = null;
 
+    #[ORM\Column]
+    private bool $isVerified = false;
+
     /**
      * @param string|null $email
      */
-    public function __construct(?string $email)
+    public function __construct(?string $email = null)
     {
         $this->email = $email;
         $this->events = new ArrayCollection();
@@ -243,6 +246,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAvatar(string $avatar): static
     {
         $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
