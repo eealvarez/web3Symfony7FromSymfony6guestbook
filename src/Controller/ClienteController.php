@@ -21,7 +21,16 @@ final class ClienteController extends AbstractController
     public function index(Request $request, Cliente $cliente): Response
     {
 
-        $form = $this->createForm(ClienteTypeForm::class, $cliente);
+        $categorias = [
+            'categoria1' => '1',
+            'categoria2' => '2',
+            'categoria3' => '3',
+        ];
+
+        $form = $this->createForm(ClienteTypeForm::class, $cliente, [
+            'categorias' => $categorias,
+            'isEdit' => true,
+        ]);
 
         $form->handleRequest($request);
 

@@ -17,15 +17,11 @@ class ClienteTypeForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
-        $categorias = [
-            'categoria1' => '1',
-            'categoria2' => '2',
-            'categoria3' => '3',
-        ];
-
         $builder
             ->add('nombre', TextType::class, [
-                'label' => 'Tu Nombre'
+                'label' => 'Tu Nombre',
+                // 'disaabled' => true,
+                'disabled' => $options['isEdit'],
             ])
             ->add('fechaNacimiento', DateType::class, [
                 'widget' => 'single_text',
@@ -33,7 +29,8 @@ class ClienteTypeForm extends AbstractType
             ->add('pais', CountryType::class)
             ->add('categoria', ChoiceType::class, [
                 'multiple' => true,
-                'choices' => $categorias,
+                // 'choices' => $categorias,
+                'choices' => $options['categorias'],
                 'expanded' => true,
             ])
             ->add('observaciones')
@@ -43,6 +40,10 @@ class ClienteTypeForm extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        $resolver->setRequired('categorias');
+
+        $resolver->setDefault('isEdit', false);
+
         $resolver->setDefaults([
             'data_class' => Cliente::class,
         ]);
