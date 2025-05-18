@@ -21,7 +21,7 @@ class ClienteTypeForm extends AbstractType
             ->add('nombre', TextType::class, [
                 'label' => 'Tu Nombre',
                 // 'disaabled' => true,
-                'disabled' => $options['isEdit'],
+                // 'disabled' => $options['isEdit'],
             ])
             ->add('fechaNacimiento', DateType::class, [
                 'widget' => 'single_text',
@@ -42,7 +42,7 @@ class ClienteTypeForm extends AbstractType
     {
         $resolver->setRequired('categorias');
 
-        $resolver->setDefault('isEdit', false);
+        // $resolver->setDefault('isEdit', false);
 
         $resolver->setDefaults([
             'data_class' => Cliente::class,
